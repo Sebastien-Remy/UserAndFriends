@@ -29,11 +29,13 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List(users, id: \.id) { item in
-                VStack(alignment: .leading) {
-                    Text(item.name)
-                        .font(.headline)
-                    Text(item.company)
+            List(users, id: \.id) { user in
+                NavigationLink(destination: UserDetail(user: user)) {
+                    VStack(alignment: .leading) {
+                        Text(user.name)
+                            .font(.headline)
+                        Text(user.company)
+                    }
                 }
             }
             .navigationBarTitle("User and Friends")
@@ -66,6 +68,30 @@ struct ContentView: View {
             // if we're still here it means there was a problem
             print("Fetch failed: \(error?.localizedDescription ?? "Unknown error")")
         }.resume()
+    }
+}
+
+struct UserDetail : View {
+    var user: User
+
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Company: \(user.company)")
+                Spacer()
+            }
+            HStack {
+                Text("Age : \(user.age)")
+                Spacer()
+            }
+            Text("Friends")
+            List(user.friends, id: \.id) { friend in
+                Text(friend.name)
+            }
+            Spacer()
+        }
+        .padding()
+        .navigationBarTitle(user.name)
     }
 }
 
